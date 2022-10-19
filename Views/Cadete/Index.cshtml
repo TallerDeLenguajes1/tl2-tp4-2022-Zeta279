@@ -2,6 +2,9 @@
     ViewData["Title"] = "Ver cadetes";
 }
 
+<section>
+    <a asp-controller="Cadete" asp-action="Create">Ingresar cadete</a>
+</section>
 <section class="cadetes">
     <table>
         <thead>
@@ -9,6 +12,7 @@
         <th>Nombre</th>
         <th>Dirección</th>
         <th>Teléfono</th>
+        <th>Pedido en curso</th>
         <th>Acciones</th>
         </thead>
         <tbody>
@@ -19,7 +23,13 @@
                     <td>@cadete.nombre</td>
                     <td>@cadete.direccion</td>
                     <td>@cadete.telefono</td>
-                    <td><a asp-controller="">Editar</a><a asp-controller="">Borrar</a><a asp-controller="">Detalles</a></td>
+                    @if(cadete.PedidoEnCurso() != null){
+                        <td>@cadete.PedidoEnCurso().Nro</td>
+                    }
+                    else{
+                        <td>-</td>
+                    }
+                    <td><a href="/Cadete/Edit/@cadete.id">Editar</a><a href="/Cadete/Delete/@cadete.id">Borrar</a><a href="/Cadete/Details/@cadete.id">Detalles</a></td>
                 </tr>
             }
         </tbody>

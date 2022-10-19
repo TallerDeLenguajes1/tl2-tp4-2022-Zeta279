@@ -2,11 +2,11 @@
 {
     public class ClienteModel: PersonaModel
     {
-        private string DatosReferenciaDireccion;
+        public string DatosRef {get;}
 
-        public ClienteModel(int id, string nom, string direc, int tel, string datos): base(id, nom, direc, tel)
+        public ClienteModel(int id, string nom, string direc, long tel, string datos): base(id, nom, direc, tel)
         {
-            DatosReferenciaDireccion = datos;
+            DatosRef = datos;
         }
     }
 }

@@ -9,17 +9,7 @@ namespace TP4.Controllers
         // GET: CadeteController
         public ActionResult Index()
         {
-            string[] array;
-            ViewData["cadetes"] = new List<CadeteModel>();
-
-            foreach (string s in System.IO.File.ReadAllLines("CSV/cadetes.csv"))
-            {
-                if (s != "")
-                {
-                    array = s.Split(";");
-                    ((List<CadeteModel>)ViewData["cadetes"]).Add(new CadeteModel(Int32.Parse(array[0]), array[1], array[2], Int32.Parse(array[3])));
-                }
-            }
+            ViewData["cadetes"] = CadeteModel.ObtenerCadetes();
 
             return View();
         }
@@ -27,6 +17,17 @@ namespace TP4.Controllers
         // GET: CadeteController/Details/5
         public ActionResult Details(int id)
         {
+
+            foreach(var cadete in CadeteModel.ObtenerCadetes()){
+                if(cadete.id == id) return View(cadete);
+            }
+
+            return RedirectToAction("Error", new {error = "No se ha encontrado el cadete solicitado"});
+        }
+
+        public ActionResult Error(string error)
+        {
+            ViewData["error"] = error;
             return View();
         }
 
@@ -38,59 +39,81 @@ namespace TP4.Controllers
 
         // POST: CadeteController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(string nombre, string direccion, long tel)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
+            int id = 0;
+
+            try{
+                foreach(var cadete in CadeteModel.ObtenerCadetes()){
+                    id = cadete.id;
+                }
+
+                string csv = $"{id + 1};{nombre};{direccion};{tel}\n";
+
+                System.IO.File.AppendAllText("CSV/cadetes.csv", csv);
             }
-            catch
-            {
-                return View();
+            catch(Exception ex){
+                Console.WriteLine("Ha ocurrido un error: " + ex.Message);
+                return RedirectToAction("Error", new {error = "Ha ocurrido un error al crear el objeto"});
             }
+            
+
+            return RedirectToAction("Create");
         }
 
         // GET: CadeteController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var lista = CadeteModel.ObtenerCadetes();
+
+            foreach(var cadete in lista){
+                if(cadete.id == id) return View(cadete);
+            }
+
+            return RedirectToAction("Error", new {error = "No se ha encontrado el cadete solicitado"});
         }
 
         // POST: CadeteController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, string nombre, string direccion, long tel)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
+            var lista = CadeteModel.ObtenerCadetes();
+            CadeteModel aux;
+
+            for(int i = 0; i < lista.Count; i++){
+                if(lista[i].id == id){
+                    aux = lista[i];
+                    lista[i] = new CadeteModel(aux.id, nombre, direccion, tel);
+                }
             }
-            catch
-            {
-                return View();
-            }
+
+            CadeteModel.IngresarCadetes(lista);
+
+            return RedirectToAction("Index");
         }
 
         // GET: CadeteController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
-        }
+            var lista = CadeteModel.ObtenerCadetes();
+            bool encontrado = false;
 
-        // POST: CadeteController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
+            for(int i = 0; i < lista.Count && !encontrado; i++){
+                if(lista[i].id == id){
+                    lista.RemoveAt(i);
+                    encontrado = true;
+                }
             }
-            catch
-            {
-                return View();
+
+            if(!encontrado){
+                return View("Error", new {error = "No se encontro el cadete solicitado"});
             }
+            else{
+                CadeteModel.IngresarCadetes(lista);
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

@@ -1,0 +1,20 @@
+@{
+    ViewData["Title"] = "Editar cadete";
+}
+@model CadeteModel;
+<section class="editar-cadete">
+    <form method="post">
+        <input type="text" value="@Model.id" hidden name="id" id="id">
+
+        <label for="nombre">Nombre 
+            <input type="text" name="nombre" id="nombre" value="@Model.nombre">
+        </label>
+        <label for="direccion">Dirección 
+            <input type="text" name="direccion" id="direccion" value="@Model.direccion">
+        </label>
+        <label for="tel">Teléfono 
+            <input type="number" name="tel" id="tel" value="@Model.telefono">
+        </label>
+        <input type="submit" value="Editar cadete">
+    </form>
+</section>
