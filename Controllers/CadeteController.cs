@@ -64,9 +64,8 @@ namespace TP4.Controllers
         // GET: CadeteController/Delete/5
         public ActionResult Delete(int id)
         {
-            DataModel.BorrarCadete(id);
-
-            return RedirectToAction("Index");
+            if (DataModel.BorrarCadete(id)) return RedirectToAction("Index");
+            else return RedirectToAction("Error", new { error = "No es posible eliminar un cadete con un pedido en curso" });
         }
     }
 }

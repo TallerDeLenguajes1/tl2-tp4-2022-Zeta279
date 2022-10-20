@@ -36,6 +36,35 @@
             return cadetes;
         }
 
+        public bool TienePedidoEnCurso()
+        {
+            if (ListadoPedidos.Count > 0) return ListadoPedidos[ListadoPedidos.Count - 1].EstaEnCurso();
+            return false;
+        }
+
+        public void EliminarPedido(int id)
+        {
+            int index = 0;
+            foreach(var pedido in ListadoPedidos)
+            {
+                if (pedido.Nro == id) break;
+                index++;
+            }
+
+            if(ListadoPedidos.Count > 0) ListadoPedidos.RemoveAt(index);
+        }
+
+        public List<PedidoModel> ObtenerPedidos()
+        {
+            return ListadoPedidos;
+        }
+
+        public PedidoModel UltimoPedido()
+        {
+            if (ListadoPedidos.Count > 0) return ListadoPedidos[ListadoPedidos.Count - 1];
+            return null;
+        }
+
         static public void IngresarCadetes(List<CadeteModel> ListaCadetes)
         {
             string csv = "";

@@ -19,13 +19,16 @@
             @foreach (var cadete in (Dictionary<int, CadeteModel>)ViewData["cadetes"])
             {
                 <tr>
+                    @{
+                        if (cadete.Value.ObtenerPedidos().Count > 1) Console.WriteLine($"Mostrando:\n" + cadete.Value.ObtenerPedidos()[cadete.Value.ObtenerPedidos().Count - 1]);
+                    }
                     <td>@cadete.Key</td>
                     <td>@cadete.Value.nombre</td>
                     <td>@cadete.Value.direccion</td>
                     <td>@cadete.Value.telefono</td>
-                    @if (cadete.Value.PedidoEnCurso() != null)
+                    @if (cadete.Value.TienePedidoEnCurso())
                     {
-                        <td>@cadete.Value.PedidoEnCurso().Nro</td>
+                        <td>@cadete.Value.UltimoPedido().Nro</td>
                     }
                     else{
                         <td>-</td>

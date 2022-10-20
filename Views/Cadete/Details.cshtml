@@ -8,4 +8,28 @@
     <p><strong>Nombre: </strong>@Model.nombre</p>
     <p><strong>Dirección: </strong>@Model.direccion</p>
     <p><strong>Teléfono: </strong>@Model.telefono</p>
+    <h2>Detalles de pedidos</h2>
+
+    @if(Model.ObtenerPedidos().Count > 0)
+    {
+        int index = 1;
+        var lista = Model.ObtenerPedidos();
+
+        foreach(var pedido in lista)
+        {
+            <p><strong>Pedido nº @index</strong></p>
+            <p><strong>Número: </strong>@pedido.Nro</p>
+            <p><strong>Detalles: </strong>@pedido.Detalles</p>
+            <strong>Datos del cliente:</strong>
+            <p><strong>Nombre: </strong>@pedido.cliente.nombre</p>
+            <p><strong>Dirección: </strong>@pedido.cliente.direccion</p>
+            <p><strong>Teléfono: </strong>@pedido.cliente.telefono</p>
+
+            @if(index++ < lista.Count)
+            {
+                <br>
+            }
+        }
+    }
+
 </section>

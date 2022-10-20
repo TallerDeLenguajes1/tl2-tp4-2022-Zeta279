@@ -57,6 +57,7 @@
                         if (Int32.Parse(aux[7]) != 0)
                         {
                             lista[Int32.Parse(aux[0])].IniciarPedido(CadeteList[Int32.Parse(aux[7])]);
+                            CadeteList[Int32.Parse(aux[7])].IngresarPedido(lista[Int32.Parse(aux[0])]);
                             if (Int32.Parse(aux[8]) == 0)
                             {
                                 lista[Int32.Parse(aux[0])].EntregarPedido();
@@ -78,12 +79,8 @@
         {
 
             CadeteList[id] = new CadeteModel(id, nom, direc, tel);
-            File.WriteAllText("CSV/cadetes.csv", "");
 
-            foreach(var cadete in CadeteList.Values)
-            {
-                IngresarCadete(cadete);
-            }
+            ActualizarCadetes();
         }
 
         static public void IngresarCadete(string nom, string direc, long tel)
@@ -92,21 +89,28 @@
             IngresarCadete(new CadeteModel(IDCadetes, nom, direc, tel));
         }
 
-        static public void IngresarPedido(string det, int id, string nom, string direc, long tel, string datos)
+        static private void ActualizarCadetes()
         {
-            IDPedidos++;
-            PedidoList.Add(IDPedidos, new PedidoModel(IDPedidos, det, id, nom, direc, tel, datos));
-        }
-
-        static public void BorrarCadete(int id)
-        {
-            CadeteList.Remove(id);
-
             File.WriteAllText("CSV/cadetes.csv", "");
 
-            foreach(var cadetes in CadeteList)
+            foreach (var cadetes in CadeteList)
             {
                 IngresarCadete(cadetes.Value);
+            }
+        }
+
+        static public bool BorrarCadete(int id)
+        {
+            if (!CadeteList[id].TienePedidoEnCurso())
+            {
+                CadeteList.Remove(id);
+
+                ActualizarCadetes();
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -128,13 +132,20 @@
 
         static public void IngresarPedido(int nro, string det, int idc, string nomc, string direc, long tel, string datos)
         {
+            IngresarPedido(new PedidoModel(nro, det, idc, nomc, direc, tel, datos));
+        }
+
+        static public void IngresarPedido(string det, int idc, string nomc, string direc, long tel, string datos)
+        {
             var lista = PedidoList.Keys.ToList<int>();
+            int aux = 0;
             lista.Sort();
             IDPedidos = lista.Min();
 
             foreach (var num in lista)
             {
-                if(num > IDPedidos + 1)
+                aux = num;
+                if (num > IDPedidos + 1)
                 {
                     IDPedidos += 1;
                     break;
@@ -145,12 +156,39 @@
                 }
             }
 
-            IngresarPedido(new PedidoModel(nro, det, idc, nomc, direc, tel, datos));
+            if (IDPedidos == aux) IDPedidos += 1;
+
+            IngresarPedido(new PedidoModel(IDPedidos, det, idc, nomc, direc, tel, datos));
+        }
+
+        static private void ActualizarPedidos()
+        {
+            File.WriteAllText("CSV/pedidos.csv", "");
+
+            foreach (var pedido in PedidoList.Values)
+            {
+                IngresarPedido(pedido);
+            }
+        }
+
+        static public void AsignarPedidoACadete(int idPedido, int idCadete)
+        {
+            PedidoList[idPedido].IniciarPedido(CadeteList[idCadete]);
+            CadeteList[idCadete].IngresarPedido(PedidoList[idPedido]);
+
+            ActualizarPedidos();
+        }
+
+        static public void BorrarPedido(int id)
+        {
+            if (PedidoList[id].EstaEnCurso() || PedidoList[id].FueEntregado()) CadeteList[PedidoList[id].Cadete.id].EliminarPedido(id);
+            PedidoList.Remove(id);
+
+            ActualizarPedidos();
         }
 
         static public void IngresarPedido(PedidoModel pedido)
         {
-
             try
             {
                 File.AppendAllText("CSV/pedidos.csv", pedido.PasarACSV());
@@ -166,12 +204,7 @@
         {
             PedidoList[id].EntregarPedido();
 
-            File.WriteAllText("CSV/pedidos.csv", "");
-
-            foreach(var pedido in PedidoList.Values)
-            {
-                IngresarPedido(pedido);
-            }
+            ActualizarPedidos();
         }
     }
 }
