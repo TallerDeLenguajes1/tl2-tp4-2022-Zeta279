@@ -16,20 +16,21 @@
         <th>Acciones</th>
         </thead>
         <tbody>
-            @foreach (CadeteModel cadete in (List<CadeteModel>)ViewData["cadetes"])
+            @foreach (var cadete in (Dictionary<int, CadeteModel>)ViewData["cadetes"])
             {
                 <tr>
-                    <td>@cadete.id</td>
-                    <td>@cadete.nombre</td>
-                    <td>@cadete.direccion</td>
-                    <td>@cadete.telefono</td>
-                    @if(cadete.PedidoEnCurso() != null){
-                        <td>@cadete.PedidoEnCurso().Nro</td>
+                    <td>@cadete.Key</td>
+                    <td>@cadete.Value.nombre</td>
+                    <td>@cadete.Value.direccion</td>
+                    <td>@cadete.Value.telefono</td>
+                    @if (cadete.Value.PedidoEnCurso() != null)
+                    {
+                        <td>@cadete.Value.PedidoEnCurso().Nro</td>
                     }
                     else{
                         <td>-</td>
                     }
-                    <td><a href="/Cadete/Edit/@cadete.id">Editar</a><a href="/Cadete/Delete/@cadete.id">Borrar</a><a href="/Cadete/Details/@cadete.id">Detalles</a></td>
+                    <td><a href="/Cadete/Edit/@cadete.Key">Editar</a><a href="/Cadete/Delete/@cadete.Key">Borrar</a><a href="/Cadete/Details/@cadete.Key">Detalles</a></td>
                 </tr>
             }
         </tbody>

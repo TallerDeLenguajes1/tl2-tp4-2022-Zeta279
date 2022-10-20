@@ -2,4 +2,65 @@
     ViewData["Title"] = "Pedidos";
 }
 
-<p>Página para ver los pedidos</p>
+
+<section class="pedidos">
+    <a asp-controller="Pedido" asp-action="Create">Ingresar pedido</a>
+    <table>
+        <thead>
+            <th>Número</th>
+            <th>Detalles</th>
+            <th>Cliente</th>
+            <th>Estado</th>
+            <th>Cadete</th>
+            <th>Acciones</th>
+        </thead>
+        <tbody>
+            @foreach(var pedido in (Dictionary<int, PedidoModel>)ViewData["pedidos"])
+            {
+                <tr>
+                    <td>@pedido.Key</td>
+                    <td>@pedido.Value.Detalles</td>
+                    <td>@pedido.Value.cliente.nombre</td>
+                    @if (pedido.Value.FueEntregado())
+                    {
+                        <td>Entregado</td>
+                        <td>@pedido.Value.Cadete.nombre</td>
+                    }
+                    else
+                    {
+                        @if (pedido.Value.EstaEnCurso())
+                        {
+                            <td>En curso</td>
+                            <td>@pedido.Value.Cadete.nombre</td>
+                        }
+                        else
+                        {
+                            <td>Pendiente</td>
+                            <td>No asignado</td>
+                        }
+                    }
+                    <td>
+                    @if (!pedido.Value.FueEntregado() && !pedido.Value.EstaEnCurso())
+                    {
+                        <a asp-controller="Pedido" asp-action="Asignar" asp-route-id="@pedido.Key">Asignar</a>
+                        <a asp-controller="Pedido" asp-action="Delete" asp-route-id="@pedido.Key">Cancelar</a>
+                    }
+                    else
+                    {
+                        @if (pedido.Value.EstaEnCurso() && !pedido.Value.FueEntregado())
+                        {
+                            <a asp-controller="Pedido" asp-action="Estado" asp-route-id="@pedido.Key">Cambiar estado</a>
+                                <a asp-controller="Pedido" asp-action="Delete" asp-route-id="@pedido.Key">Cancelar</a>
+                        }
+                        else
+                        {
+                                <a asp-controller="Pedido" asp-action="Delete" asp-route-id="@pedido.Key">Borrar</a>
+                        }
+                    }
+                    </td>
+                    <td><a asp-controller="Pedido" asp-action="Details" asp-route-id="@pedido.Key">Detalles</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>
