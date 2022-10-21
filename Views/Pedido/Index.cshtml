@@ -2,9 +2,11 @@
     ViewData["Title"] = "Pedidos";
 }
 
+<section class="pedido-crear">
+    <a asp-controller="Pedido" asp-action="Create">+</a>
+</section>
 
 <section class="pedidos">
-    <a asp-controller="Pedido" asp-action="Create">Ingresar pedido</a>
     <table>
         <thead>
             <th>Número</th>
@@ -39,26 +41,26 @@
                             <td>No asignado</td>
                         }
                     }
-                    <td>
+                    <td><section class="table-botones">
                     @if (!pedido.Value.FueEntregado() && !pedido.Value.EstaEnCurso())
                     {
-                        <a asp-controller="Pedido" asp-action="Asignar" asp-route-id="@pedido.Key">Asignar</a>
-                        <a asp-controller="Pedido" asp-action="Delete" asp-route-id="@pedido.Key">Cancelar</a>
+                        <a asp-controller="Pedido" asp-action="Asignar" asp-route-id="@pedido.Key" class="pedido-asignar">Asignar</a>
+                        <a asp-controller="Pedido" asp-action="Delete" asp-route-id="@pedido.Key" class="pedido-borrar">Cancelar</a>
                     }
                     else
                     {
                         @if (pedido.Value.EstaEnCurso() && !pedido.Value.FueEntregado())
                         {
-                            <a asp-controller="Pedido" asp-action="Estado" asp-route-id="@pedido.Key">Cambiar estado</a>
-                                <a asp-controller="Pedido" asp-action="Delete" asp-route-id="@pedido.Key">Cancelar</a>
+                            <a asp-controller="Pedido" asp-action="Estado" asp-route-id="@pedido.Key" class="pedido-estado">Cambiar estado</a>
+                            <a asp-controller="Pedido" asp-action="Delete" asp-route-id="@pedido.Key" class="pedido-borrar">Cancelar</a>
                         }
                         else
                         {
-                                <a asp-controller="Pedido" asp-action="Delete" asp-route-id="@pedido.Key">Borrar</a>
+                            <a asp-controller="Pedido" asp-action="Delete" asp-route-id="@pedido.Key" class="pedido-borrar">Borrar</a>
                         }
                     }
-                    </td>
-                    <td><a asp-controller="Pedido" asp-action="Details" asp-route-id="@pedido.Key">Detalles</a></td>
+                    <a asp-controller="Pedido" asp-action="Details" asp-route-id="@pedido.Key" class="pedido-detalles">Detalles</a>
+                    </section></td>
                 </tr>
             }
         </tbody>

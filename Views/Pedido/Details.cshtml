@@ -11,7 +11,7 @@
     <p><strong>Dirección: </strong>@Model.cliente.direccion</p>
     <p><strong>Teléfono: </strong>@Model.cliente.telefono</p>
     @if(Model.EstaEnCurso() || Model.FueEntregado()){
-        <a asp-controller="Cadete" asp-action="Details" asp-route-id="@Model.Cadete.id">Ver datos del cadete</a>
+        <a asp-controller="Cadete" asp-action="Details" asp-route-id="@Model.Cadete.id" class="datos-cadete">Ver datos del cadete</a>
     }
     else{
         <p>No se asignó a ningun cadete</p>

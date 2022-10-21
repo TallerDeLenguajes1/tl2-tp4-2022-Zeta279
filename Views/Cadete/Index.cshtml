@@ -2,8 +2,8 @@
     ViewData["Title"] = "Ver cadetes";
 }
 
-<section>
-    <a asp-controller="Cadete" asp-action="Create">Ingresar cadete</a>
+<section class="cadete-crear">
+    <a asp-controller="Cadete" asp-action="Create">+</a>
 </section>
 <section class="cadetes">
     <table>
@@ -22,7 +22,7 @@
                     @{
                         if (cadete.Value.ObtenerPedidos().Count > 1) Console.WriteLine($"Mostrando:\n" + cadete.Value.ObtenerPedidos()[cadete.Value.ObtenerPedidos().Count - 1]);
                     }
-                    <td>@cadete.Key</td>
+                    <td><strong>@cadete.Key</strong></td>
                     <td>@cadete.Value.nombre</td>
                     <td>@cadete.Value.direccion</td>
                     <td>@cadete.Value.telefono</td>
@@ -33,7 +33,7 @@
                     else{
                         <td>-</td>
                     }
-                    <td><a href="/Cadete/Edit/@cadete.Key">Editar</a><a href="/Cadete/Delete/@cadete.Key">Borrar</a><a href="/Cadete/Details/@cadete.Key">Detalles</a></td>
+                    <td><section class="table-botones"><a href="/Cadete/Edit/@cadete.Key" class="cadete-editar">Editar</a><a href="/Cadete/Delete/@cadete.Key" class="cadete-borrar">Borrar</a><a href="/Cadete/Details/@cadete.Key" class="cadete-detalles">Detalles</a></section></td>
                 </tr>
             }
         </tbody>
