@@ -54,7 +54,11 @@
                     try
                     {
                         lista.Add(Int32.Parse(aux[0]), new PedidoModel(Int32.Parse(aux[0]), aux[1], Int32.Parse(aux[2]), aux[3], aux[4], long.Parse(aux[5]), aux[6]));
-                        if (Int32.Parse(aux[7]) != 0)
+                        if(Int32.Parse(aux[7]) == -1){
+                            lista[Int32.Parse(aux[0])].AsignarCadete(null);
+                            lista[Int32.Parse(aux[0])].EntregarPedido();
+                        }
+                        else if (Int32.Parse(aux[7]) != 0)
                         {
                             lista[Int32.Parse(aux[0])].IniciarPedido(CadeteList[Int32.Parse(aux[7])]);
                             CadeteList[Int32.Parse(aux[7])].IngresarPedido(lista[Int32.Parse(aux[0])]);
@@ -85,8 +89,14 @@
 
         static public void IngresarCadete(string nom, string direc, long tel)
         {
-            IDCadetes = CadeteList.Keys.Max() + 1;
-            IngresarCadete(new CadeteModel(IDCadetes, nom, direc, tel));
+            try{
+                if(CadeteList.Count > 0) IDCadetes = CadeteList.Keys.Max() + 1;
+                else IDCadetes = 1;
+                IngresarCadete(new CadeteModel(IDCadetes, nom, direc, tel));
+            }
+            catch(Exception ex){
+                Console.WriteLine("Ha ocurrido un error (IngresarCadete): " + ex.Message);
+            }
         }
 
         static private void ActualizarCadetes()
@@ -99,13 +109,33 @@
             }
         }
 
+        static public void RestaurarDatos()
+        {
+            string datosCadete = File.ReadAllText("CSV/Restaurar/cadetes.csv");
+            string datosPedido = File.ReadAllText("CSV/Restaurar/pedidos.csv");
+            
+            File.WriteAllText("CSV/cadetes.csv", datosCadete);
+            File.WriteAllText("CSV/pedidos.csv", datosPedido);
+
+            CadeteList = ObtenerCadetes();
+            PedidoList = ObtenerPedidos();
+        }
+
         static public bool BorrarCadete(int id)
         {
             if (!CadeteList[id].TienePedidoEnCurso())
             {
-                CadeteList.Remove(id);
 
+                foreach(var pedido in CadeteList[id].ObtenerPedidos())
+                {
+                    PedidoList[pedido.Nro].BorrarCadete();
+                }
+
+                CadeteList.Remove(id);
+                
                 ActualizarCadetes();
+                ActualizarPedidos();
+
                 return true;
             }
             else
@@ -181,7 +211,10 @@
 
         static public void BorrarPedido(int id)
         {
-            if (PedidoList[id].EstaEnCurso() || PedidoList[id].FueEntregado()) CadeteList[PedidoList[id].Cadete.id].EliminarPedido(id);
+            if (PedidoList[id].EstaEnCurso() || PedidoList[id].FueEntregado())
+            {
+                if(PedidoList[id].Cadete is not null) CadeteList[PedidoList[id].Cadete.id].EliminarPedido(id);
+            }
             PedidoList.Remove(id);
 
             ActualizarPedidos();

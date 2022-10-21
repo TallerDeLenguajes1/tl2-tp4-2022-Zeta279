@@ -23,6 +23,13 @@ namespace TP4.Controllers
             return View();
         }
 
+        public IActionResult Restaurar()
+        {
+            DataModel.RestaurarDatos();
+
+            return RedirectToAction("Index");
+        }
+
         [HttpGet]
         public IActionResult Details(int id)
         {

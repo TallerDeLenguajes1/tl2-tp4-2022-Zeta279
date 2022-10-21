@@ -26,7 +26,14 @@
                     @if (pedido.Value.FueEntregado())
                     {
                         <td>Entregado</td>
-                        <td>@pedido.Value.Cadete.nombre</td>
+                        @if(pedido.Value.Cadete is null)
+                        {
+                            <td><i>Borrado</i></td>
+                        }
+                        else
+                        {
+                            <td>@pedido.Value.Cadete.nombre</td>
+                        }
                     }
                     else
                     {

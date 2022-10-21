@@ -49,11 +49,11 @@ table tr:nth-child(even){
   display: inline-block;
 }
 
-.cadete-editar{
+.cadete-editar, .pedido-estado, .pedido-asignar{
   background-color: rgb(47, 148, 47);
 }
 
-.cadete-editar:hover{
+.cadete-editar:hover, .pedido-estado:hover, .pedido-asignar:hover{
   background-color: rgb(39, 121, 39);
 }
 
@@ -79,6 +79,8 @@ table tr:nth-child(even){
 
 .table-botones{
   display: flex;
+  justify-content: center;
+  align-content: space-around;
   margin: 0;
 }
 
@@ -95,5 +97,40 @@ table tr:nth-child(even){
 
 .cadete-crear, .pedido-crear{
   display: inline-block;
+  margin: 1em 0;
+}
+
+label{
+  display: block;
+  margin: 0.2em 0;
+}
+
+input[type="submit"]{
+  background-color: gray;
+  border: 0;
+  border-radius: 10px;
+  padding: 0.5em;
+  font-weight: bold;
+  color: white;
+  display: block;
+  margin: auto;
+  margin-top: 1em;
+}
+
+input{
+  margin-bottom: 1em;
+}
+
+form{
+  margin: auto;
+  border: 1px gray solid;
+  border-radius: 10px;
+  text-align: center;
+  padding: 1em;
+  width: fit-content;
+}
+
+.crear-cadete h2, .crear-pedido h2{
+  text-align: center;
   margin: 1em 0;
 }

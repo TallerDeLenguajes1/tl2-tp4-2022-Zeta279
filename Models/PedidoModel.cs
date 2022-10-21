@@ -24,6 +24,11 @@
             Cadete = cadete;
         }
 
+        public void BorrarCadete()
+        {
+            Cadete = null;
+        }
+
         public void EntregarPedido()
         {
             EnCurso = false;
@@ -62,6 +67,11 @@
             if (Entregado) auxB = 1;
 
             if (!EnCurso && !Entregado) cadID = 0;
+            else if(Entregado && Cadete is not null)
+            {
+                cadID = -1;
+            }
+
             else cadID = Cadete.id;
 
             return $"{Nro};{Detalles};{cliente.id};{cliente.nombre};{cliente.direccion};{cliente.telefono};{cliente.DatosRef};{cadID};{auxA};{auxB}\n";
